@@ -1,7 +1,7 @@
 from functools import lru_cache
 from langgraph.graph import StateGraph
 from ai_companion.graph.state import AICompanionState
-from ai_companion.graph.nodes import memory_extraction_node, router_node
+from ai_companion.graph.nodes import memory_extraction_node, router_node, context_injection_node
 
 @lru_cache(maxsize=1)
 def create_workflow_graph():
@@ -9,7 +9,7 @@ def create_workflow_graph():
 
     graph_builder.add_node("memory_extraction_node", memory_extraction_node)
     graph_builder.add_node("router_node", router_node)
-
+    graph_builder.add_node("context_injection_node", context_injection_node)
 
 # from functools import lru_cache
 # from langgraph.graph import StateGraph
