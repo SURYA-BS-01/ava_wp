@@ -2,6 +2,7 @@ import re
 from langchain_groq import ChatGroq
 from langchain_core.output_parsers import StrOutputParser
 from ai_companion.settings import settings
+from ai_companion.modules.image.text_to_image import TextToImage
 
 def get_chat_model(temperature: float = 0.7):
     return ChatGroq(
@@ -17,3 +18,6 @@ def remove_asterisk_content(text: str) -> str:
 class AsteriskRemovalParser(StrOutputParser):
     def parse(self, text):
         return remove_asterisk_content(super().parse(text))
+    
+def get_text_to_image_module():
+    return TextToImage()

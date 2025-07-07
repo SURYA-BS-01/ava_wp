@@ -32,4 +32,4 @@ def get_character_response_chain(summary: str = ""):
             MessagesPlaceholder(variable_name="messages"),
         ]
     )
-    return prompt | model | AsteriskRemovalParser
+    return prompt | model | AsteriskRemovalParser()

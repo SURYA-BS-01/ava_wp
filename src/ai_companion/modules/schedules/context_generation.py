@@ -32,7 +32,7 @@ class ScheduleContextGenerator:
         end_time = datetime.strptime(end_str, "%H:%M").time()
         return start_time, end_time
 
-    @staticmethod
+    @classmethod
     def get_current_activity(cls) -> Optional[str]:
         """Get the current activity based on the schedule."""
         
