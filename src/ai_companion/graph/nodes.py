@@ -6,10 +6,10 @@ from ai_companion.modules.memory.long_term.memory_manager import get_memory_mana
 from ai_companion.graph.utils.chains import get_router_chain, get_character_response_chain
 from ai_companion.settings import settings
 from ai_companion.modules.schedules.context_generation import ScheduleContextGenerator
-from ai_companion.graph.utils.helpers import get_text_to_image_module, get_text_to_speech_module
+from ai_companion.graph.utils.helpers import get_text_to_image_module, get_text_to_speech_module, get_chat_model
 
 from langchain_core.runnables import RunnableConfig
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage, RemoveMessage
 
 async def memory_extraction_node(state: AICompanionState):
     """Extract and store important information from the last message."""
@@ -108,3 +108,25 @@ async def audio_node(state: AICompanionState, config: RunnableConfig):
 
     return {"messages": response, "audio_buffer": output_audio}
 
+async def summarize_conversation_node(state: AICompanionState):
+    model = get_chat_model()
+    summary = state.get("summary", "")
+
+    if summary:
+        summary_message = (
+            f"This is summary of the conversation to date between Ava and the user: {summary}\n\n"
+            "Extend the summary by taking into account the new messages above:"
+        )
+    else:
+        summary_message = (
+            "Create a summary of the conversation above between Ava and the user. "
+            "The summary must be a short description of the conversation so far, "
+            "but that captures all the relevant information shared between Ava and the user:"
+        )
+
+    messages = state["messages"] + [HumanMessage(content=summary_message)]
+    response = await model.ainvoke(messages)
+
+    delete_messages = [RemoveMessage(id=m.id) for m in state["messages"][: -settings.TOTAL_MESSAGES_AFTER_SUMMARY]]
+
+    return {"summary": response.content, "messages": delete_messages}
