@@ -6,7 +6,7 @@ from ai_companion.modules.memory.long_term.memory_manager import get_memory_mana
 from ai_companion.graph.utils.chains import get_router_chain, get_character_response_chain
 from ai_companion.settings import settings
 from ai_companion.modules.schedules.context_generation import ScheduleContextGenerator
-from ai_companion.graph.utils.helpers import get_text_to_image_module
+from ai_companion.graph.utils.helpers import get_text_to_image_module, get_text_to_speech_module
 
 from langchain_core.runnables import RunnableConfig
 from langchain_core.messages import AIMessage, HumanMessage
@@ -87,3 +87,24 @@ async def image_node(state: AICompanionState, config: RunnableConfig):
         config,
     )
     return {"messages": AIMessage(content=response), "image_path": img_path}
+
+async def audio_node(state: AICompanionState, config: RunnableConfig):
+    current_activity = ScheduleContextGenerator.get_current_activity()
+    memory_context = state.get("memory_context", "")
+
+    chain = get_character_response_chain(state.get("summary", ""))
+    text_to_speech_module = get_text_to_speech_module()
+
+    response = await chain.ainvoke(
+        {
+            "messages": state["messages"],
+            "current_activity": current_activity,
+            "memory_context": memory_context,
+        },
+        config=config
+    )
+
+    output_audio = await text_to_speech_module.synthesize(response)
+
+    return {"messages": response, "audio_buffer": output_audio}
+

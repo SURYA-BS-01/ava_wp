@@ -3,6 +3,7 @@ from langchain_groq import ChatGroq
 from langchain_core.output_parsers import StrOutputParser
 from ai_companion.settings import settings
 from ai_companion.modules.image.text_to_image import TextToImage
+from ai_companion.modules.speech.text_to_speech import TextToSpeech
 
 def get_chat_model(temperature: float = 0.7):
     return ChatGroq(
@@ -21,3 +22,6 @@ class AsteriskRemovalParser(StrOutputParser):
     
 def get_text_to_image_module():
     return TextToImage()
+
+def get_text_to_speech_module():
+    return TextToSpeech()
