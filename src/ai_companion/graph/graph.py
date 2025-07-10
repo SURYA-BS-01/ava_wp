@@ -41,4 +41,4 @@ def create_workflow_graph():
 
     return graph_builder
 
-graph = create_workflow_graph().compile()
+graph_builder = create_workflow_graph()

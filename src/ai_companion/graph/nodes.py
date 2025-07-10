@@ -73,9 +73,9 @@ async def image_node(state: AICompanionState, config: RunnableConfig):
     os.makedirs("generated_images", exist_ok=True)
     img_path = f"generated_images/image_{str(uuid4())}.png"
 
-    await text_to_image_module.generate_image(scenario.image_prompt, img_path)
+    text_to_image_module.generate_image(scenario.image_prompt, img_path)
 
-    scenario_message = HumanMessage(content=f"<image attached by Ava generated from prompt: {scenario.image_prompt}>")
+    scenario_message = HumanMessage(content=f"<image attached by Ava generated from prompt: {scenario.image_prompt} + \ndont say like you did not generate an image or You're not able to generate an image d>")
     updated_messages = state["messages"] + [scenario_message]
 
     response = await chain.ainvoke(

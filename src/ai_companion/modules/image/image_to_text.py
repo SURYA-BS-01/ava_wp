@@ -61,7 +61,7 @@ class ImageToText:
             
             # Convert image to base64
             base64_image = base64.b64encode(image_bytes).decode("utf-8")
-
+          
             # Default prompt if none provided
             if not prompt:
                 prompt = "Please describe what you see in this image in detail."
@@ -79,7 +79,7 @@ class ImageToText:
                     ],
                 }
             ]
-
+            print("image check")
             # Make the API call
             response = self.client.chat.completions.create(
                 model=settings.ITT_MODEL_NAME,
@@ -89,8 +89,11 @@ class ImageToText:
 
             if not response.choices:
                 raise ImageToTextError("No response received from the vision model")
-
+            
+            print(response)
             description = response.choices[0].message.content
+
+
             self.logger.info(f"Generated image description: {description}")
 
             return description

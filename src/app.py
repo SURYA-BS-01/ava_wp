@@ -48,7 +48,8 @@ async def on_message(message: cl.Message):
                         image_bytes,
                         "Please describe what you see in this image in the context of our conversation.",
                     )
-                    content += f"\n[Image Analysis: {description}]"
+                    # content += f"\n[Image Analysis: {description}]"
+                    msg.content = description
                 except Exception as e:
                     cl.logger.warning(f"Failed to analyze image: {e}")
 
@@ -87,7 +88,7 @@ async def on_message(message: cl.Message):
 
 
 @cl.on_audio_chunk
-async def on_audio_chunk(chunk: cl.AudioChunk):
+async def on_audio_chunk(chunk):
     """Handle incoming audio chunks"""
     if chunk.isStart:
         buffer = BytesIO()
